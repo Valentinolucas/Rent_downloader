@@ -3,7 +3,7 @@
 
 import requests
 import json
-import datetime
+from datetime import date
 import time
 import os
 
@@ -66,7 +66,7 @@ uk_cities = [
 ]
 
 last_city = 0
-date = datetime.datetime.now()
+date = date.today()
 
 
 class Zoopla_listings:
@@ -76,7 +76,7 @@ class Zoopla_listings:
 
     def __init__(self,city_name,page_number=1):
         self.city_name = city_name
-        self.date = datetime.datetime.now()
+        self.date = date.today()
         self.count = 0
         self.page_number = page_number
         self.listing_qty = 1
@@ -93,7 +93,7 @@ class Zoopla_listings:
             try:
                 content_rental = rentals.content
                 content_rental = json.loads(content_rental)
-                with open('/home/luqui/Rent_downloader/'+ str(date.year) + str(date.month) + str(date.day)+'/'+str(self.city_name) + ' ' + 'page' + ' ' + str(self.page_number) +' '+ str(self.date.month) + '-' + str(self.date.day) + '-' + str(self.date.year) + ' ' + str(self.date.hour) + str(self.date.minute) , 'w') as f:
+                with open('/home/luqui/Rent_downloader/'+ str(date) +'/'+str(self.city_name) + ' ' + 'page' + ' ' + str(self.page_number) +' '+ str(self.date.month) + '-' + str(self.date.day) + '-' + str(self.date.year) + ' ' , 'w') as f:
                     json.dump(content_rental, f)
                     print(city +' page '+str(self.page_number)+ ' download is complete')
                 self.listing_qty = len(content_rental['listing'])
@@ -121,7 +121,7 @@ class Zoopla_listings:
 
 def last_created(string):
     global last_city
-    list_of_files = os.listdir('/home/luqui/Rent_downloader/' + str(date.year) + str(date.month) + str(date.day))
+    list_of_files = os.listdir('/home/luqui/Rent_downloader/' + str(date))
     # list_of_files = os.listdir('/home/luqui/Rent_downloader')
     try:
         latest_file = max(list_of_files, key=os.path.getctime)
@@ -140,11 +140,11 @@ def last_created(string):
 
 if __name__ == '__main__':
 
-    if os.path.exists('/home/luqui/Rent_downloader/'+ str(date.year) + str(date.month) + str(date.day)):
-        os.chdir('/home/luqui/Rent_downloader/'+ str(date.year) + str(date.month) + str(date.day))
+    if os.path.exists('/home/luqui/Rent_downloader/'+ str(date)):
+        os.chdir('/home/luqui/Rent_downloader/'+ str(date))
     else:
-        os.mkdir('/home/luqui/Rent_downloader/' + str(date.year) + str(date.month) + str(date.day))
-        os.chdir('/home/luqui/Rent_downloader/' + str(date.year) + str(date.month) + str(date.day))
+        os.mkdir('/home/luqui/Rent_downloader/' + str(date))
+        os.chdir('/home/luqui/Rent_downloader/' + str(date))
 
 
     for city in uk_cities:
