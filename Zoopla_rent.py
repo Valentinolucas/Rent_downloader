@@ -6,6 +6,7 @@ import json
 from datetime import date
 import time
 import os
+import gzip
 
 #API KEYS
 zoopla_key = 'z7cyp8jsb3enyxxfvvs8s8fn'
@@ -93,8 +94,10 @@ class Zoopla_listings:
             try:
                 content_rental = rentals.content
                 content_rental = json.loads(content_rental)
-                with open('/home/luqui/Rent_downloader/'+ str(date) +'/'+str(self.city_name) + ' ' + 'page' + ' ' + str(self.page_number) +' '+ str(self.date.month) + '-' + str(self.date.day) + '-' + str(self.date.year) + ' ' , 'w') as f:
-                    json.dump(content_rental, f)
+                with gzip.GzipFile('/home/luqui/Rent_downloader/'+ str(date) +'/'+str(self.city_name) + ' ' + 'page' + ' ' + str(self.page_number) +' '+ str(self.date.month) + '-' + str(self.date.day) + '-' + str(self.date.year) + ' ' , 'w') as f:
+                    json_str = json.dumps(content_rental) + "\n"
+                    json_bytes = json_str.encode('utf-8')
+                    f.write(json_bytes)
                     print(city +' page '+str(self.page_number)+ ' download is complete')
                 self.listing_qty = len(content_rental['listing'])
                 self.count += 1
